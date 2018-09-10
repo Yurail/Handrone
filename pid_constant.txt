@@ -1,0 +1,90 @@
+float angle[3];
+float acceleration[3];
+float prevangle[3];
+int countFeedback[3]={0,0,0};
+int countRateCycle[3] = {0,0,0};
+int countCycle[3] = {0,0,0};
+int countChange[3] = {0,0,0};
+float Rate[3] = {0.3,0.1,0};
+
+boolean Check(float a , float b){
+if(a*b>0)
+result = TRUE;
+else
+result = FALSE;
+}
+
+//Kp procedure
+while(1){
+
+if(countFeedback[0]>=3){ //Feedback stop
+countFeedback[0]=0;
+countRateCycle[0] = 0;
+break;
+}
+else if(countRateCycle[0]>=30){ //Reduce rate
+Rate[0] /= 10;
+countFeedback[0]++;
+countRateCycle[0]=0;
+}
+else{ //Check Kp
+if(countCycle[0]>=30){ //Check Kp high/low(30)
+if(countChange[0]>=1){ //High
+Kp[2] -= Rate[0];
+countChange[0]=0; //Refresh angle sign change
+}
+else if(Check(angle[2],acceleration[2])){ //Low
+Kp[2] += Rate[0];
+}
+else{ //Common case
+Kp[2] -= Rate[0]/2;
+}
+countCycle[0]=0; //Refresh cycle number
+}
+
+if(Check(angle[2],prevangle[2])){ //Angle change
+countChange[0]++;
+}
+countRateCycle[0]++; //# of change Kp
+}
+countCycle[0]++; //Cycle finish
+
+}
+
+//Ki procedure
+while(1){
+
+if(countFeedback[1]>=3){ //Feedback stop
+countFeedback[1]=0;
+countRateCycle[1] = 0;
+break;
+}
+elseif(countRateCycle[1]>=30){ //Reduce rate
+Rate[1] /= 10;
+countFeedback[1]++;
+countRateCycle[1]=0;
+}
+else{ //Check Ki
+if(countCycle[1]>=100){ //Check Ki low(100)
+if(countChange[1]>=3){ //Low
+Ki[2] += Rate[1];
+countChange[1] = 0; //Refresh angle change number
+}
+else if(abs(angle[2])>10){ //High
+Ki[2] -= Rate[1];
+countChange[1] = 0; //Refresh angle change number
+}
+else{ //Common case
+Ki[2] += Rate[1]/2;
+countChange[1] = 0; //Refresh angle change number
+}
+countCycle[1]=0; //Refresh cycle number
+}
+
+if(Check(angle[2],prevangle[2])){ //Angle change
+countChange[1]++;
+}
+countRateCycle[1]++; //# of change Ki
+}
+countCycle[1]++; //Cycle finish
+}
