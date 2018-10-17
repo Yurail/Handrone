@@ -23,6 +23,9 @@ int bt1State = HIGH;
 int bt2State = HIGH;
 int bt3State = HIGH;
 int bt4State = HIGH;
+// Number of throttle count(height);
+int Count = 0;
+const int Step = 20;
 // ------------------------------Defining Barometer Constants-----------------
 #define MOVAVG_SIZE         32
 #define STANDARD_PRESSURE   1013.25
@@ -33,10 +36,8 @@ const float sea_press = 1015; // Standard sea pressure
 float pressure, temp;
 int altit; // Altitude
 //value of throttle (0 ~ 1000) controlled by variable resistor
+//value of throttle (0 ~ 1000) controlled by up/down button
 int throttleVal;
-// To control Kp value
-int Kpcontrol;
-float Kp;
 // Offset between Current & Zero angle
 float OFFSET[3] = {0,0,0};
 // Instruction to Drone {Throttle, YAW, ROLL, PITCH}
@@ -248,9 +249,20 @@ void ResetButtonControl() {
 }
 
 void ThrottleButtonControl() {
+  throttleVal = Count * Step;
+    if((bt4State!=digitalRead(bt4Pin))&&(digitalRead(bt4Pin)==LOW)) {
+      Count=0;
+    }
+    else if((bt2State!=digitalRead(bt2Pin))&&(digitalRead(bt2Pin)==LOW)) {
+      Count--;
+    }
+    else if((bt1State!=digitalRead(bt1Pin))&&(digitalRead(bt1Pin)==LOW)) {
+      Count++;
+    }
+    
   //throttleVal = map(analogRead(A0),0,1023,0,1000); // Change throttle using potentiometer
-  if(Serial.available()) // When Serial Communications available
-  throttleVal = Serial.parseInt(); // Change throttle using Serial Monitor's input
+  //if(Serial.available()) // When Serial Communications available
+  //throttleVal = Serial.parseInt(); // Change throttle using Serial Monitor's input
   //Kpcontrol = map(analogRead(A1),0,1023,0,1000); // Change Kp using potentiometer 
   //Kp = float(Kpcontrol)/100; // Use value between 0~10
 }
