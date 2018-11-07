@@ -55,6 +55,7 @@ VectorFloat gravity;
 float ypr[3]; // YAW,ROLL,PITCH
 int angle[3]; // Offseted angles
 int anglelimit = 10; // Threshold
+int limangle[3]; // Limited angles
 
 void setup() {
     Wire.begin(); // Start wire communications
@@ -105,8 +106,8 @@ void loop() {
     //Serial.print(ypr[0]*180/M_PI-OFFSET[0]);
     //Serial.print(ypr[1]*180/M_PI-OFFSET[1]);
     //Serial.print(ypr[2]*180/M_PI-OFFSET[2]);
-    String a = String("") + throttleVal + "&" + angle[0] + "&" + angle[1] + "&" + angle[2] + "&";
     
+    String a = String("") + throttleVal + "&" + limangle[0] + "&" + limangle[1] + "&" + limangle[2] + "&" + angle[0] + "&" + angle[1] + "&" + angle[2] + "&";
     Serial.println(a);
     mySerial.println(a);
     
@@ -296,25 +297,25 @@ void AngleLimitation(){
 
   for (int i=0;i<3;i++){ // Repeat 3 times for 3 axis
     if(angle[i]>3*anglelimit){ // Treat angle above anglelimit
-      angle[i] = -6;
+      limangle[i] = -6;
     }
     else if(angle[i]>2*anglelimit){
-      angle[i] = -4;
+      limangle[i] = -4;
     }
     else if(angle[i]>anglelimit){
-      angle[i] = -2;
+      limangle[i] = -2;
     }
     else if(angle[i]>-anglelimit){
-      angle[i] = 0;
+      limangle[i] = 0;
     }
     else if(angle[i]>-2*anglelimit){
-      angle[i] = 2;
+      limangle[i] = 2;
     }
     else if(angle[i]>-3*anglelimit){
-      angle[i] = 4;
+      limangle[i] = 4;
     }
-    else{
-      angle[i] = 6;
+    else if(angle[i]<=-3*anglelimit){
+      limangle[i] = 6;
     }
   }
 }
