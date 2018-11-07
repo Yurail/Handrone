@@ -299,25 +299,50 @@ void AngleLimitation(){
     if(angle[i]>3*anglelimit){ // Treat angle above anglelimit
       limangle[i] = -6;
     }
-    else if(angle[i]>2*anglelimit){
+    else if((angle[i]>2*anglelimit)&&(angle[i]<=3*anglelimit)){ // 
       limangle[i] = -4;
     }
-    else if(angle[i]>anglelimit){
+    else if((angle[i]>anglelimit)&&(angle[i]<=2*anglelimit)){// 
       limangle[i] = -2;
     }
-    else if(angle[i]>-anglelimit){
+    else if((angle[i]>-anglelimit)&&(angle[i]<=anglelimit)){// 
       limangle[i] = 0;
     }
-    else if(angle[i]>-2*anglelimit){
+    else if((angle[i]>-2*anglelimit)&&(angle[i]<=-anglelimit)){// i 
       limangle[i] = 2;
     }
-    else if(angle[i]>-3*anglelimit){
+    else if((angle[i]>-3*anglelimit)&&(angle[i]<=-2*anglelimit)){// 
       limangle[i] = 4;
     }
     else if(angle[i]<=-3*anglelimit){
       limangle[i] = 6;
     }
   }
+    /* 2018-11-07 before changing
+    for (int i=0;i<3;i++){ // Repeat 3 times for 3 axis
+    if(angle[i]>3*anglelimit){ // Treat angle above anglelimit
+      limangle[i] = -6;
+    }
+    else if(angle[i]>2*anglelimit){ // if((angle[i]>2*anglelimit)&&(angle[i]<=3*anglelimit))
+      limangle[i] = -4;
+    }
+    else if(angle[i]>anglelimit){// if((angle[i]>2*anglelimit)&&(angle[i]<=3*anglelimit))
+      limangle[i] = -2;
+    }
+    else if(angle[i]>-anglelimit){// if((angle[i]>-anglelimit)&&(angle[i]<=anglelimit))
+      limangle[i] = 0;
+    }
+    else if(angle[i]>-2*anglelimit){// if((angle[i]>-2*anglelimit)&&(angle[i]<=3*anglelimit))
+      limangle[i] = 2;
+    }
+    else if(angle[i]>-3*anglelimit){// if((angle[i]>-3*anglelimit)&&(angle[i]<=-2*anglelimit))
+      limangle[i] = 4;
+    }
+    else if(angle[i]<=-3*anglelimit){
+      limangle[i] = 6;
+    }
+  }
+  */
 }
 
 // Arduino Reset function
