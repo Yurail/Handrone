@@ -54,7 +54,7 @@ Quaternion q;
 VectorFloat gravity;
 float ypr[3]; // YAW,ROLL,PITCH
 int angle[3]; // Offseted angles
-int anglelimit = 5; // Threshold
+int anglelimit = 10; // Threshold
 
 void setup() {
     Wire.begin(); // Start wire communications
@@ -107,7 +107,7 @@ void loop() {
     //Serial.print(ypr[2]*180/M_PI-OFFSET[2]);
     String a = String("") + throttleVal + "&" + angle[0] + "&" + angle[1] + "&" + angle[2] + "&";
     
-    //Serial.print(a);
+    Serial.println(a);
     mySerial.println(a);
     
     bt4State = digitalRead(bt4Pin);
@@ -295,12 +295,27 @@ void AngleLimitation(){
   angle[2] = int(ypr[2]*180/M_PI-OFFSET[2]);
 
   for (int i=0;i<3;i++){ // Repeat 3 times for 3 axis
-    if(angle[i]>anglelimit) // Treat angle above anglelimit(5 degree)
-      angle[i] = -2; // Set values -2
-    else if(abs(angle[i])>anglelimit) //  Treat angle below -anglelimit
-      angle[i] = 2; // Set values 2
-    else
-      angle[i] = 0; // Set zero between -5~5 degree for 3 angles
+    if(angle[i]>3*anglelimit){ // Treat angle above anglelimit
+      angle[i] = -6;
+    }
+    else if(angle[i]>2*anglelimit){
+      angle[i] = -4;
+    }
+    else if(angle[i]>anglelimit){
+      angle[i] = -2;
+    }
+    else if(angle[i]>-anglelimit){
+      angle[i] = 0;
+    }
+    else if(angle[i]>-2*anglelimit){
+      angle[i] = 2;
+    }
+    else if(angle[i]>-3*anglelimit){
+      angle[i] = 4;
+    }
+    else{
+      angle[i] = 6;
+    }
   }
 }
 
